@@ -5,3 +5,4 @@ This code is made to create a chess clock based on Arduino. Some components are 
 - 8digits LED display
 - wires
 - time!
+- facultative : battery holder to emancipate your clock from the usb current
