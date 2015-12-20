@@ -1,7 +1,7 @@
 # arduino_chess_clock
 This code is made to create a chess clock based on Arduino. Some components are needed such as : 
 - Arduino UNO
-- 3 push-up buttons
+- 3 push buttons
 - 7digits LED display
 - wires
 - 3 resistors 10kΩ
