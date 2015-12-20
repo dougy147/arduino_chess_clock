@@ -2,50 +2,50 @@
 #define DISP 8
 LedControl lc = LedControl(DISP, DISP + 2, DISP + 1, 1);
  
-int secondes_pour_P1;
-int secondes_pour_P2;
-int  minutes_pour_P1=5;
+int seconds_for_P1;
+int seconds_for_P2;
+int  minutes_for_P1=5;
 int  increment_P1=0;
-int  minutes_pour_P2=5;
+int  minutes_for_P2=5;
 int  increment_P2=0;
-int etat_bouton_P1 = LOW;
-int etat_bouton_P2 = LOW;
-int etat_bouton3 = LOW;
-int bouton_P1 = 6;
-int bouton_P2 = 7;
-int bouton3 = 13;
+int button_state_P1 = LOW;
+int button_state_P2 = LOW;
+int middle_button_state = LOW;
+int button_P1 = 6;
+int button_P2 = 7;
+int middle_button = 13;
 bool gameover = false;
-float temps_P1 = 0;
-float temps_P2 = 0;
-bool est_le_tour_de_P1 = false;
-bool est_le_tour_de_P2 = false;
-float derniere_comp_P1 = millis();
-float derniere_comp_P2 = millis();
-int fin_partie=0;
+float time_P1 = 0;
+float time_P2 = 0;
+bool is_P1s_turn = false;
+bool is_P2s_turn = false;
+float last_time_comparison_P1 = millis();
+float last_time_comparison_P2 = millis();
+int end_of_game=0;
 bool whiteleft = true;
-int minuteP1H = minutes_pour_P1 / 10;
-int minuteP1L = minutes_pour_P1 - minuteP1H * 10;
-int minuteP2H = minutes_pour_P2 / 10;
-int minuteP2L = minutes_pour_P2 - minuteP2H * 10;
-int secondP1H = secondes_pour_P1 / 10;
-int secondP1L = secondes_pour_P1 - 10 * secondP1H;
-int secondP2H = secondes_pour_P2 / 10;
-int secondP2L = secondes_pour_P2 - 10 * secondP2H;
+int minuteP1H = minutes_for_P1 / 10;
+int minuteP1L = minutes_for_P1 - minuteP1H * 10;
+int minuteP2H = minutes_for_P2 / 10;
+int minuteP2L = minutes_for_P2 - minuteP2H * 10;
+int secondP1H = seconds_for_P1 / 10;
+int secondP1L = seconds_for_P1 - 10 * secondP1H;
+int secondP2H = seconds_for_P2 / 10;
+int secondP2L = seconds_for_P2 - 10 * secondP2H;
 int buzzer = A1;  //A1
-int compteur = -1;
+int countdown = -1;
 bool pair = false;
  
 void setup() {
  
    Serial.begin(9600);
-  pinMode(bouton_P1, INPUT);
-  pinMode(bouton_P2, INPUT);
-  pinMode(bouton3, INPUT);
+  pinMode(button_P1, INPUT);
+  pinMode(button_P2, INPUT);
+  pinMode(middle_button, INPUT);
   pinMode(buzzer, OUTPUT);
  
-  digitalWrite(bouton_P1, LOW);
-  digitalWrite(bouton_P2, LOW);
-  digitalWrite(bouton3, LOW);
+  digitalWrite(button_P1, LOW);
+  digitalWrite(button_P2, LOW);
+  digitalWrite(middle_button, LOW);
  
   pinMode(DISP, OUTPUT);
   pinMode(DISP + 1, OUTPUT);
@@ -63,23 +63,23 @@ affichage_increment_P1();
  
 delay(150);
  
- if (digitalRead(bouton_P2) == HIGH) {
-    minutes_pour_P1++;
+ if (digitalRead(button_P2) == HIGH) {
+    minutes_for_P1++;
   }
  
-   if (digitalRead(bouton_P1) == HIGH) {
-    minutes_pour_P1--;
+   if (digitalRead(button_P1) == HIGH) {
+    minutes_for_P1--;
   }
  
-if (minutes_pour_P1 <= 0) {
-    temps_P1 = 30000;
-    minutes_pour_P1 = 0;
-    secondes_pour_P1 = 30;
+if (minutes_for_P1 <= 0) {
+    time_P1 = 30000;
+    minutes_for_P1 = 0;
+    seconds_for_P1 = 30;
   }
  
-  else { secondes_pour_P1 = 0;}
+  else { seconds_for_P1 = 0;}
  
-  if (digitalRead(bouton3) == HIGH) {
+  if (digitalRead(middle_button) == HIGH) {
     lc.clearDisplay(0);
     delay(150);
    
@@ -94,16 +94,16 @@ if (minutes_pour_P1 <= 0) {
  
 delay(150);
  
-if (digitalRead(bouton_P1) == HIGH && digitalRead(bouton_P2) == HIGH) {
+if (digitalRead(button_P1) == HIGH && digitalRead(button_P2) == HIGH) {
  
     loop();
   }
  
-  if (digitalRead(bouton_P2) == HIGH) {
+  if (digitalRead(button_P2) == HIGH) {
     increment_P1++;
   }
  
- if (digitalRead(bouton_P1) == HIGH) {
+ if (digitalRead(button_P1) == HIGH) {
    increment_P1--;
   }
  
@@ -111,7 +111,7 @@ if (digitalRead(bouton_P1) == HIGH && digitalRead(bouton_P2) == HIGH) {
     increment_P1 = 0;
   }
  
-    if (digitalRead(bouton3) == HIGH) {
+    if (digitalRead(middle_button) == HIGH) {
     lc.clearDisplay(0);
     delay(150);
    
@@ -125,27 +125,27 @@ void configure_minP2() {
   affichage_increment_P2();
  delay(150);
  
- if (digitalRead(bouton_P1) == HIGH && digitalRead(bouton_P2) == HIGH) {
+ if (digitalRead(button_P1) == HIGH && digitalRead(button_P2) == HIGH) {
  
     configure_incP1();
   }
  
-  if (digitalRead(bouton_P2) == HIGH) {
-    minutes_pour_P2++;
+  if (digitalRead(button_P2) == HIGH) {
+    minutes_for_P2++;
   }
  
- if (digitalRead(bouton_P1) == HIGH) {
-    minutes_pour_P2--;
+ if (digitalRead(button_P1) == HIGH) {
+    minutes_for_P2--;
   }
  
-    if (minutes_pour_P2 <= 0) {
-    temps_P2 = 30000;
-        minutes_pour_P2 = 0;
-    secondes_pour_P2 = 30;
+    if (minutes_for_P2 <= 0) {
+    time_P2 = 30000;
+        minutes_for_P2 = 0;
+    seconds_for_P2 = 30;
   }
-  else { secondes_pour_P2 = 0;}
+  else { seconds_for_P2 = 0;}
  
-   if (digitalRead(bouton3) == HIGH) {
+   if (digitalRead(middle_button) == HIGH) {
     lc.clearDisplay(0);
     delay(150);
    
@@ -161,16 +161,16 @@ void configure_minP2() {
  
 delay(150);
  
-if (digitalRead(bouton_P1) == HIGH && digitalRead(bouton_P2) == HIGH) {
+if (digitalRead(button_P1) == HIGH && digitalRead(button_P2) == HIGH) {
  
     configure_minP2();
   }
  
-if (digitalRead(bouton_P2) == HIGH) {
+if (digitalRead(button_P2) == HIGH) {
     increment_P2++;
   }
  
- if (digitalRead(bouton_P1) == HIGH) {
+ if (digitalRead(button_P1) == HIGH) {
    increment_P2--;
   }
  
@@ -178,23 +178,23 @@ if (digitalRead(bouton_P2) == HIGH) {
     increment_P2 = 0;
   }
  
-  if (digitalRead(bouton3) == HIGH) {
+  if (digitalRead(middle_button) == HIGH) {
     lc.clearDisplay(0);
     delay(150);
    
-    temps_P1 = (minutes_pour_P1 * 60000);
-    temps_P2 = (minutes_pour_P2 * 60000);
-if (temps_P1 == 0) {
-  temps_P1 = 30000;
+    time_P1 = (minutes_for_P1 * 60000);
+    time_P2 = (minutes_for_P2 * 60000);
+if (time_P1 == 0) {
+  time_P1 = 30000;
 }
-if (temps_P2 == 0) {
-  temps_P2 = 30000;
+if (time_P2 == 0) {
+  time_P2 = 30000;
 }
    
     increment_P1 = increment_P1 * 1000;
     increment_P2 = increment_P2 * 1000;
  
-    digitalWrite(bouton3, LOW);
+    digitalWrite(middle_button, LOW);
     delay(50);
     game();
   }
@@ -205,54 +205,54 @@ if (temps_P2 == 0) {
  
 void game() {
  
-fin_partie = 0;
-  etat_bouton_P1 = digitalRead(bouton_P1);
-etat_bouton_P2 = digitalRead(bouton_P2);
-etat_bouton3 = digitalRead(bouton3);
+end_of_game = 0;
+  button_state_P1 = digitalRead(button_P1);
+button_state_P2 = digitalRead(button_P2);
+middle_button_state = digitalRead(middle_button);
  
-minutes_pour_P1 = floor(temps_P1 / 60000);
-secondes_pour_P1 = floor(temps_P1 / 1000) - minutes_pour_P1 * 60;
+minutes_for_P1 = floor(time_P1 / 60000);
+seconds_for_P1 = floor(time_P1 / 1000) - minutes_for_P1 * 60;
  
-minutes_pour_P2 = floor(temps_P2 / 60000);
-secondes_pour_P2 = floor(temps_P2 / 1000) - minutes_pour_P2 * 60;
+minutes_for_P2 = floor(time_P2 / 60000);
+seconds_for_P2 = floor(time_P2 / 1000) - minutes_for_P2 * 60;
  
-if (!est_le_tour_de_P1 && !est_le_tour_de_P2 && etat_bouton_P1 == LOW && etat_bouton_P2 == LOW) {
+if (!is_P1s_turn && !is_P2s_turn && button_state_P1 == LOW && button_state_P2 == LOW) {
  
 affichagelc();
    
   }
 
-if (etat_bouton_P1 == HIGH && etat_bouton_P2 == LOW) {
+if (button_state_P1 == HIGH && button_state_P2 == LOW) {
  
 digitalWrite(buzzer, HIGH);
  
- increment_joueur_1();}
+ increment_player_1();}
  
-if (etat_bouton_P2 == HIGH && etat_bouton_P1 == LOW) {
+if (button_state_P2 == HIGH && button_state_P1 == LOW) {
  
 digitalWrite(buzzer, HIGH);
  
-increment_joueur_2();
+increment_player_2();
 }
  
-if (etat_bouton3 == HIGH && est_le_tour_de_P1) {
+if (middle_button_state == HIGH && is_P1s_turn) {
  
   pauseP1();
 }
  
  
-if (etat_bouton3 == HIGH && est_le_tour_de_P2) {
+if (middle_button_state == HIGH && is_P2s_turn) {
  
   pauseP2();
 }
  
-if (est_le_tour_de_P1) {
+if (is_P1s_turn) {
  
-  Update_temps_P1();
+  Update_time_P1();
  
 }
-else if (!(!est_le_tour_de_P1 && !est_le_tour_de_P2)) {
-  Update_temps_P2();
+else if (!(!is_P1s_turn && !is_P2s_turn)) {
+  Update_time_P2();
 }
  
 else {
@@ -262,13 +262,13 @@ game();
  
 }
  
- void Update_temps_P1() {
+ void Update_time_P1() {
  
-  temps_P1 -= ((millis() - derniere_comp_P1));
-  derniere_comp_P1 = millis();
+  time_P1 -= ((millis() - last_time_comparison_P1));
+  last_time_comparison_P1 = millis();
  
  
-if (temps_P1 <= 0) {
+if (time_P1 <= 0) {
   gameover = true;
  
   gameOver();
@@ -280,12 +280,12 @@ game();
  
 }
  
-void Update_temps_P2() {
+void Update_time_P2() {
  
-  temps_P2 -= ((millis() - derniere_comp_P2));
-  derniere_comp_P2 = millis();
+  time_P2 -= ((millis() - last_time_comparison_P2));
+  last_time_comparison_P2 = millis();
  
- if (temps_P2 <= 0) {
+ if (time_P2 <= 0) {
   gameover = true;
  gameOver();
 }
@@ -295,53 +295,53 @@ game();
 }
  
  
-void Au_tour_de_P1() {
+void P1_turn() {
   digitalWrite(buzzer, LOW);
-if (est_le_tour_de_P1) {
+if (is_P1s_turn) {
  return;
 }
  
-est_le_tour_de_P2 = false;
-est_le_tour_de_P1 = true;
-compteur++;
+is_P2s_turn = false;
+is_P1s_turn = true;
+countdown++;
 pair = !pair;
-derniere_comp_P1 = millis();
+last_time_comparison_P1 = millis();
  game();
 }
  
  
-void Au_tour_de_P2() {
+void P2_turn() {
   digitalWrite(buzzer, LOW);
-if (est_le_tour_de_P2) {
+if (is_P2s_turn) {
   return;
 }
  
-est_le_tour_de_P1 = false;
-est_le_tour_de_P2 = true;
-compteur++;
+is_P1s_turn = false;
+is_P2s_turn = true;
+countdown++;
 pair=!pair;
-derniere_comp_P2 = millis();
+last_time_comparison_P2 = millis();
   game();
 }
  
 void gameOver() {
  
-  etat_bouton_P1 = digitalRead(bouton_P1);
-etat_bouton_P2 = digitalRead(bouton_P2);
-etat_bouton3 = digitalRead(bouton3);
+  button_state_P1 = digitalRead(button_P1);
+button_state_P2 = digitalRead(button_P2);
+middle_button_state = digitalRead(middle_button);
  
-if (etat_bouton3 == HIGH) {
-  compteur = -1;
+if (middle_button_state == HIGH) {
+  countdown = -1;
   pair=false;
-temps_P1 = 0;
-temps_P2 = 0;
-est_le_tour_de_P1 = false;
-est_le_tour_de_P2 = false;
-secondes_pour_P1 = 0;
-secondes_pour_P2 = 0;
- minutes_pour_P1=5;
+time_P1 = 0;
+time_P2 = 0;
+is_P1s_turn = false;
+is_P2s_turn = false;
+seconds_for_P1 = 0;
+seconds_for_P2 = 0;
+ minutes_for_P1=5;
 increment_P1=0;
-minutes_pour_P2=5;
+minutes_for_P2=5;
 increment_P2=0;
  
   delay(150);
@@ -349,7 +349,7 @@ loop();
 }
  
  
-if (temps_P1 <= 0 && etat_bouton3 == LOW) {
+if (time_P1 <= 0 && middle_button_state == LOW) {
  
  
   digitalWrite(buzzer, HIGH);
@@ -361,7 +361,7 @@ if (temps_P1 <= 0 && etat_bouton3 == LOW) {
  
 gameOver(); }
  
-if (temps_P2 <= 0 && etat_bouton3 == LOW) {
+if (time_P2 <= 0 && middle_button_state == LOW) {
  
   digitalWrite(buzzer, HIGH);
   delay(100);
@@ -376,42 +376,42 @@ gameOver();
 }
  
  
-void increment_joueur_1() {
+void increment_player_1() {
  
  
-if (est_le_tour_de_P1) {
-  temps_P1 = temps_P1 + (increment_P1);
+if (is_P1s_turn) {
+  time_P1 = time_P1 + (increment_P1);
  
-  Au_tour_de_P2();
+  P2_turn();
 }
  
 else {
  
-  Au_tour_de_P2();}
+  P2_turn();}
  
 }
   
-void increment_joueur_2() {
-  if (est_le_tour_de_P2) {
+void increment_player_2() {
+  if (is_P2s_turn) {
  
-temps_P2 = temps_P2 + (increment_P2);
+time_P2 = time_P2 + (increment_P2);
  
  
-  Au_tour_de_P1();}
+  P1_turn();}
  
   else {
  
-    Au_tour_de_P1();}}
+    P1_turn();}}
 
 void affichagelc() {
-minuteP1H = minutes_pour_P1 / 10;
-minuteP1L = minutes_pour_P1 - minuteP1H * 10;
-minuteP2H = minutes_pour_P2 / 10;
-minuteP2L = minutes_pour_P2 - minuteP2H * 10;
-secondP1H = secondes_pour_P1 / 10;
-secondP1L = secondes_pour_P1 - 10 * secondP1H;
-secondP2H = secondes_pour_P2 / 10;
-secondP2L = secondes_pour_P2 - 10 * secondP2H;
+minuteP1H = minutes_for_P1 / 10;
+minuteP1L = minutes_for_P1 - minuteP1H * 10;
+minuteP2H = minutes_for_P2 / 10;
+minuteP2L = minutes_for_P2 - minuteP2H * 10;
+secondP1H = seconds_for_P1 / 10;
+secondP1L = seconds_for_P1 - 10 * secondP1H;
+secondP2H = seconds_for_P2 / 10;
+secondP2L = seconds_for_P2 - 10 * secondP2H;
  
 if (minuteP1H == 0) {
          
@@ -486,28 +486,28 @@ void pauseP1() {
         lc.setChar(0, 1, 'P', false);
  
   delay(300);
-  int estpauseP1 = 1;
+  int paused_by_P1 = 1;
  
-etat_bouton_P1 = digitalRead(bouton_P1);
-etat_bouton_P2 = digitalRead(bouton_P2);
-etat_bouton3 = digitalRead(bouton3);
+button_state_P1 = digitalRead(button_P1);
+button_state_P2 = digitalRead(button_P2);
+middle_button_state = digitalRead(middle_button);
 
-est_le_tour_de_P1 = false;
-est_le_tour_de_P2 = false;
+is_P1s_turn = false;
+is_P2s_turn = false;
  
  
-if (etat_bouton3 == HIGH && estpauseP1 == 1) {
+if (middle_button_state == HIGH && paused_by_P1 == 1) {
  
 delay(250);
-derniere_comp_P1 = millis();
-est_le_tour_de_P1 = true;
+last_time_comparison_P1 = millis();
+is_P1s_turn = true;
   game();
 }
  
-if (etat_bouton3 == LOW && etat_bouton_P1 == HIGH && etat_bouton_P2 == HIGH) {
+if (middle_button_state == LOW && button_state_P1 == HIGH && button_state_P2 == HIGH) {
   softReset();
  
-fin_partie = 1;
+end_of_game = 1;
 delay(250);
 loop();
 }
@@ -531,27 +531,27 @@ void pauseP2() {
         lc.setDigit(0, 2, 0, false);
         lc.setChar(0, 1, 'P', false);
   delay(300);
-  int estpauseP2 = 1;
+  int paused_by_P2 = 1;
  
-etat_bouton_P1 = digitalRead(bouton_P1);
-etat_bouton_P2 = digitalRead(bouton_P2);
-etat_bouton3 = digitalRead(bouton3);
+button_state_P1 = digitalRead(button_P1);
+button_state_P2 = digitalRead(button_P2);
+middle_button_state = digitalRead(middle_button);
  
-est_le_tour_de_P1 = false;
-est_le_tour_de_P2 = false;
+is_P1s_turn = false;
+is_P2s_turn = false;
  
  
-if (etat_bouton3 == HIGH && estpauseP2 == 1) {
+if (middle_button_state == HIGH && paused_by_P2 == 1) {
  
 delay(250);
-derniere_comp_P2 = millis();
-est_le_tour_de_P2 = true;
+last_time_comparison_P2 = millis();
+is_P2s_turn = true;
   game();
 }
  
-if (etat_bouton3 == LOW && etat_bouton_P1 == HIGH && etat_bouton_P2 == HIGH) {
+if (middle_button_state == LOW && button_state_P1 == HIGH && button_state_P2 == HIGH) {
   softReset();
-  fin_partie = 1;
+  end_of_game = 1;
  
 delay(250);
 loop();
@@ -577,14 +577,14 @@ void affichage_increment_P1() {
   lc.setChar(0, 6, '1', false);
   lc.setChar(0, 5, ' ', false);
   lc.setChar(0, 4, '0', false);
-  if (minutes_pour_P1 <= 9) {
+  if (minutes_for_P1 <= 9) {
    
   lc.setDigit(0, 4, '0', false);
-  lc.setDigit(0, 3, minutes_pour_P1, false);
+  lc.setDigit(0, 3, minutes_for_P1, false);
   }
-   if (minutes_pour_P1 >= 10) {
-  lc.setDigit(0, 4, minutes_pour_P1 / 10, false);
-  lc.setDigit(0, 3, minutes_pour_P1 - (minutes_pour_P1 / 10) *10, false);
+   if (minutes_for_P1 >= 10) {
+  lc.setDigit(0, 4, minutes_for_P1 / 10, false);
+  lc.setDigit(0, 3, minutes_for_P1 - (minutes_for_P1 / 10) *10, false);
   }
  
   lc.setRow(0, 2, B00000001);
@@ -606,13 +606,13 @@ void affichage_increment_P2() {
   lc.setChar(0, 6, '2', false);
   lc.setChar(0, 5, ' ', false);
   lc.setChar(0, 4, '0', false);
-  if (minutes_pour_P2 <= 9) {
+  if (minutes_for_P2 <= 9) {
   lc.setDigit(0, 4, '0', false);
-  lc.setDigit(0, 3, minutes_pour_P2, false);
+  lc.setDigit(0, 3, minutes_for_P2, false);
   }
-   if (minutes_pour_P2 >= 10) {
-  lc.setDigit(0, 4, minutes_pour_P2 / 10, false);
-  lc.setDigit(0, 3, minutes_pour_P2 - (minutes_pour_P2 / 10) *10, false);
+   if (minutes_for_P2 >= 10) {
+  lc.setDigit(0, 4, minutes_for_P2 / 10, false);
+  lc.setDigit(0, 3, minutes_for_P2 - (minutes_for_P2 / 10) *10, false);
   }
  
   lc.setRow(0, 2, B00000001);
