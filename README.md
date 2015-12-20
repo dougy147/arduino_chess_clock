@@ -11,4 +11,5 @@ This code is made to create a chess clock based on Arduino. Some components are 
 I will soon share the wiring part (how to assemble each items) with schemas.
 Also, I'll share some links to buy the components I suggested at the beginning of the readme.
 
-You'll notice in the code that variables name are in french. I will change that so you can understand better what is done.
+Maybe I'll add some comments so the code'll be more comprehensible
+
