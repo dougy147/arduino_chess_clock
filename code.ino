@@ -1,13 +1,15 @@
 #include "LedControl.h"
 #define DISP 8
-LedControl lc = LedControl(DISP, DISP + 2, DISP + 1, 1);
+LedControl lc = LedControl(DISP, DISP + 2, DISP + 1, 1);  
+
+/* Here we create a certain number of variables wich will be useful below */
  
 int seconds_for_P1;
 int seconds_for_P2;
-int  minutes_for_P1=5;
-int  increment_P1=0;
-int  minutes_for_P2=5;
-int  increment_P2=0;
+int minutes_for_P1=5;
+int increment_P1=0;
+int minutes_for_P2=5;
+int increment_P2=0;
 int button_state_P1 = LOW;
 int button_state_P2 = LOW;
 int middle_button_state = LOW;
@@ -31,7 +33,7 @@ int secondP1H = seconds_for_P1 / 10;
 int secondP1L = seconds_for_P1 - 10 * secondP1H;
 int secondP2H = seconds_for_P2 / 10;
 int secondP2L = seconds_for_P2 - 10 * secondP2H;
-int buzzer = A1;  //A1
+int buzzer = A1;  //if you connect a buzzer on the A1 port a sound will be made at each move
 int countdown = -1;
 bool pair = false;
  
@@ -59,7 +61,7 @@ void setup() {
  
 void loop() {
  
-affichage_increment_P1();
+affichage_increment_P1();	//determining P1's increment
  
 delay(150);
  
