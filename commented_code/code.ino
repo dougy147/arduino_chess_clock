@@ -2,6 +2,7 @@
 #define DISP 8
 LedControl lc = LedControl(DISP, DISP + 2, DISP + 1, 1);  
 
+/* To avoid overloading Arduino's memory it is better not to use this version of the code but the other one*/
 /* Here we create a certain number of variables wich will be useful below */
  
 int seconds_for_P1;
