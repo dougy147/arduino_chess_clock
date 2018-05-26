@@ -1,20 +1,12 @@
 # arduino_chess_clock
-This code is made to create a chess clock based on Arduino. Some components are needed such as : 
-- Arduino UNO
+This code, basically and roughly written, is to be loaded in Arduino hardware and will make it act as a chess clock. Some components are needed : 
+- Arduino (this code has only been tested on Arduino UNO)
 - 3 push buttons
 - 7digits LED display
-- wires
+- A bunch of wires
 - 3 resistors 10kΩ
-- time!
+- Facultative : battery holder to emancipate your clock from usb current need.
+- Facultative : a buzzer so you'll  be warned when your time runs out.
 
-- facultative : battery holder to emancipate your clock from the usb current
-- facultative : a buzzer so you an be adverted when your time runs out
-
-
-Also, I'll share some links to buy the components I suggested at the beginning of the readme.
-
-Maybe I'll add some comments so the code'll be more comprehensible
-
-
-update :
+last_update :
 added the schema for the wiring part (see schema.jpg)
