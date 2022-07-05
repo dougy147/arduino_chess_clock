@@ -28,7 +28,7 @@ Moreover they are cheap (especially _non official_ ones), and they can do a lot.
 ## Schema
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/dougy147/arduino_chess_clock/master/schema/schema.jpg" width="33%" />
+<img src="https://raw.githubusercontent.com/dougy147/arduino_chess_clock/master/schema/schema.jpg" width="44%" />
 </p>
 
 
