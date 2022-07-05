@@ -1,6 +1,6 @@
 # Arduino Chess Clock ♟️ ⏰ [unmaintened repo]
 
-I needed a chess clock, so I made one (_an ugly but functioning one_).
+I needed a chess clock, so I made one (_an ugly but functional one_).
 
 So, feed your Arduino with this code (`code.ino`) and wire it has described on the schema (see below ⬇️).
 
