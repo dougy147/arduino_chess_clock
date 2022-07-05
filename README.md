@@ -2,7 +2,7 @@
 
 I needed a chess clock, so I made one (_an ugly but functional one_).
 
-So, feed your Arduino with this code (`code.ino`) and wire it has described on the schema (see below ⬇️).
+To replicate it, feed your Arduino with `code.ino`, and wire it has described on the schema below ⬇️.
 
 When flashing `code.ino` to a correctly wired Arduino, your can :
 
